@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Bonjour {{ user.username }} !</h2>
+  <p>Voici ton espace personnel.</p>
+
+  <form method="GET" action="{% url 'search' %}">
+    <input type="text" name="q" placeholder="Rechercher...">
+    <select name="type">
+      <option value="all">Tout</option>
+      <option value="book">Livres</option>
+      <option value="movie">Films</option>
+      <option value="series">Séries</option>
+    </select>
+    <button type="submit">Rechercher</button>
+  </form>
+
+  <h2>Mes Livres</h2>
+  <ul>
+    {% for book in books %}
+      <li>
+        {% if book.image %}
+          <a href="{% url 'item_detail' model_name='book' item_id=book.id %}">
+          <img src="{{ book.image.url }}" alt="{{ book.title }}" style="height:150px;">
+          </a>
+        {% else %}
+          {{ book.title }} - {{ book.author }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Mes Séries</h2>
+  </ul>
+    {% for serie in series %}
+      <li>
+        {% if serie.image %}
+          <a href="{% url 'item_detail' model_name='series' item_id=serie.id %}">
+          <img src="{{ serie.image.url }}" alt="{{ serie.title }}" style="height:150px;">
+          </a>
+        {% else %}
+          {{ serie.title }} - {{ serie.author }}
+        {% endif %}
+        {% if serie.read %}(vu){% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Mes Films</h2>
+  </ul>
+    {% for m in movies %}
+      <li>
+        {% if m.image %}
+          <a href="{% url 'item_detail' model_name='movie' item_id=m.id %}">
+           <img src="{{ m.image.url }}" alt="{{ m.title }}" style="height:150px;">
+          </a>
+        {% else %}
+          {{ m.title }} - {{ m.director }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  <p><a href="{% url 'add_book' %}">Ajouter un livre</a></p>
+  <p><a href="{% url 'add_series' %}">Ajouter une série</a></p>
+  <p><a href="{% url 'add_movie' %}">Ajouter un film</a></p>
+{% endblock %}

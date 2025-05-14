@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ instance.title }}</h2>
+
+  {% if model_name == 'book' %}
+    <p>Auteur : {{ instance.author }}</p>
+    <p>{% if instance.read %} Ce livre a été lu {% else %} Ce livre n'a pas encore été lu {% endif %}</p>
+
+  {% elif model_name == 'movie' %}
+    <p>Réalisateur : {{ instance.director }}</p>
+    <p>{% if instance.watched %} Film vu {% else %} Film non vu {% endif %}</p>
+
+  {% elif model_name == 'series' %}
+    <p>Nombre de saisons : {{ instance.seasons }}</p>
+    <p>{% if instance.completed %} Série terminée {% else %} Série non terminée {% endif %}</p>
+  {% endif %}
+
+  {% if instance.genres.all %}
+    <p>Genres :
+      {% for genre in instance.genres.all %}
+        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+
+  {% if instance.image %}
+    <img src="{{ instance.image.url }}" alt="{{ instance.title }}" style="height: 300px;">
+  {% endif %}
+
+  <a href="{% url 'edit_item' model_name=model_name item_id=instance.id %}">Modifier</a>
+
+  <!-- Bouton de suppression -->
+  <button id="deleteBtn">Supprimer</button>
+
+  <!-- Formulaire de suppression caché -->
+  <form id="deleteForm" action="{% url 'delete_item' model_name=model_name item_id=instance.id %}" method="post" style="display:none;">
+    {% csrf_token %}
+    <button type="submit">Confirmer la suppression</button>
+  </form>
+
+  <!-- Fenêtre pop-up de confirmation -->
+  <div id="popup" style="display: none;">
+    <p>Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+    <button id="confirmDelete">Oui</button>
+    <button id="cancelDelete">Non</button>
+  </div>
+
+  <!-- Style de la pop-up -->
+  <style>
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    // Afficher la pop-up lorsque l'on clique sur le bouton "Supprimer"
+    document.getElementById('deleteBtn').addEventListener('click', function() {
+      document.getElementById('popup').style.display = 'block';
+    });
+
+    // Si l'utilisateur confirme la suppression
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+      document.getElementById('deleteForm').submit(); // Soumettre le formulaire de suppression
+    });
+
+    // Si l'utilisateur annule la suppression
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+      document.getElementById('popup').style.display = 'none'; // Fermer la pop-up
+    });
+  </script>
+
+{% endblock %}

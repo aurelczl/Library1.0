@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ series.title }}</h2>
+  <p>Nombre de saisons: {{ series.seasons }}</p>
+  <p>{% if series.completed %} Cette série est terminée {% else %} Cette série n'est pas terminée {% endif %}</p>
+  
+  {% if series.genres.all %}
+    <p>Genres :
+      {% for genre in series.genres.all %}
+        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+
+  {% if series.image %}
+    <img src="{{ series.image.url }}" alt="{{ series.title }}" style="height:300px;">
+  {% endif %}
+
+  <p>Informations supplémentaires sur le livre...</p>
+  <a href="{% url 'edit_item' model_name='series' item_id=series.id %}">Modifier</a>
+{% endblock %}
+

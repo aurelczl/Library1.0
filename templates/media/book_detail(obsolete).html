@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ book.title }}</h2>
+  <p>Auteur: {{ book.author }}</p>
+  <p>{% if book.read %} Ce livre a été lu {% else %} Ce livre n'a pas encore été lu {% endif %}</p>
+
+  {% if book.genres.all %}
+    <p>Genres :
+      {% for genre in book.genres.all %}
+        <span>{{ genre.name }}</span>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+
+  {% if book.image %}
+    <img src="{{ book.image.url }}" alt="{{ book.title }}" style="height:300px;">
+  {% endif %}
+
+  <p>Informations supplémentaires sur le livre...</p>
+  <a href="{% url 'edit_item' model_name='book' item_id=book.id %}">Modifier</a>
+{% endblock %}
+
+

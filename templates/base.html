@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon site{% endblock %}</title>
+
+    <!-- CSS Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- JS Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+</head>
+<body>
+    <header>
+        <h1>Bienvenue</h1>
+        <nav>
+            <a href="/">Accueil</a>
+            {% if user.is_authenticated %}
+                <a href="/profile/">Mon profil</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                   {% csrf_token %}
+                   <button type="submit">Déconnexion</button>
+                </form>
+
+            {% else %}
+                <a href="/accounts/login/">Connexion</a>
+                <a href="/register/">Inscription</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 🧩 Bloc pour scripts JS supplémentaires (comme Select2 sur certains formulaires) -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
